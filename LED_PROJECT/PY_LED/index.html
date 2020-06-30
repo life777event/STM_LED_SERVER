@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>ledproject</title>
+    </head>
+ 
+    <body>
+        <h1>LED Project</h1>
+        
+        <p><input type="button" value="OFF" id="setLED" /></p>
+
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+        <script src="/socket.io/socket.io.js"></script>
+        <script>
+            var socket = io.connect('http://localhost:1312');
+            var ledBt = document.getElementById("setLED");
+            
+            //On demande le pseudo à l'utilisateur
+            var pseudo = prompt('Quel est votre pseudo?');
+            //On envoie le nom
+            socket.emit('new_client',pseudo);
+            
+            //Message d'actualisation de la LED par le serveur
+            socket.on('stateLED', function(message) {
+                ledBt.value=(!message)?"OFF":"ON";
+            })
+            
+            //Message d'actualisation de la LED par le client
+            $('#setLED').click(function() {
+                socket.emit('setLED','DUMP');
+            })
+        </script>
+    </body>
+</html>
